@@ -10,16 +10,18 @@ theme_twoseventyeight <- theme_twoseventyeight +
 theme(plot.background = element_rect(fill = "white"),
 panel.background = element_rect(fill = 'white'),
 text = element_text(family = "Exo 2"),
-plot.caption = element_text(size = rel(0.8), hjust=c(0,1)),
+plot.caption = element_text(size = rel(0.9), hjust = 0),
+plot.tag = element_text(size = rel(0.8), hjust=c(0,1), color = '#6d6f71'),
+#plot.tag.position = c(0,0),
 axis.text = element_text(size = rel(0.8)),
-axis.title = element_text(size = rel(1.1)),
+#axis.title = element_text(size = rel(1.1)),
 legend.text = element_text(size = rel(0.8)),
 legend.title = element_text(size = rel(1.1), face = "bold"),
 plot.title = element_text(size = rel(1.5), face = "bold", hjust = 0),
 plot.subtitle = element_text(size = rel(1.2), hjust = 0),
-strip.text = element_text(size = rel(0.8), face = "bold"),
-axis.title.x = element_text(margin = margin(t = 10)),
-axis.title.y = element_text(margin = margin(r = 10)))
+strip.text = element_text(size = rel(0.8), face = "bold"))
+#axis.title.x = element_text(margin = margin(t = 10)),
+#axis.title.y = element_text(margin = margin(r = 10)))
 
 #Creating Custom Pallete
 twoseventyeight_color <- function(...) {

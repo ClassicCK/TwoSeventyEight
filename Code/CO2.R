@@ -11,10 +11,9 @@ co2 <- ggplot(csv.clean, aes(x = Date, y = PPM)) +
   theme_twoseventyeight +
   guides(size = "none") +
   labs(title = "Global CO₂ Concentration",
-       subtitle = str_wrap("Carbon Dioxide concentration measured in parts per million at the Mauna Loa Observatory in Hawai'i", width = 50),
-       caption = c("TWOSEVENTYEIGHT", "SOURCE: NOAA/GML & Scripps Institution of Oceanography")) +
-  ylab("CO₂ (ppm)") +
-  xlab("Year")
+       subtitle = str_wrap("Carbon Dioxide concentration measured in parts per million", width = 50),
+       caption = str_wrap("Measured at the Mauna Loa Observatory in Hawai'i ewhfliuewgfl iuegwfLEIUYQGF Liyuqgfeliyug lgqeUIGLlgqr hlreukqghliu welfiuYGEWKYg fLI UY3E GLfiuygkq 3EIUWYG FKIQUYJE WFTGDIU", width = 120),
+       tag = c("TWOSEVENTYEIGHT"))
 
 ggsave(filename= "~/Documents/TwoSeventyEight/Figures/CO2.png",
        plot = co2, units=c("px"), width = 3200, height = 1800, dpi=300)
