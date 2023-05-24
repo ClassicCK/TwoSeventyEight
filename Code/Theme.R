@@ -1,85 +1,87 @@
 library(ggthemes)
 library(ggplot2)
-library(stringr)
 library(stringi)
 
-#Creating Custom Theme 
-theme_twoseventyeight <- theme_fivethirtyeight()
+# Function
+theme_twoseventyeight <- function() {
+  theme_foundation(base_size = 15, base_family = "")
+  
+  theme(
+    plot.background = element_rect(fill = "white"),
+    panel.background = element_rect(fill = "white"),
+    line = element_line(colour = "black"),
+    rect = element_rect(fill = "white", 
+    linetype = 0, colour = NA), 
+    axis.title = element_blank(),
+    axis.ticks = element_blank(), 
+    axis.line = element_blank(), 
+    legend.background = element_rect(), 
+    legend.position = "bottom", 
+    legend.direction = "horizontal", 
+    legend.box = "vertical", 
+    panel.grid = element_line(colour = NULL), 
+    panel.grid.major = element_line(colour = "#D2D2D2"), 
+    panel.grid.minor = element_blank(), 
+    plot.margin = unit(c(1, 1, 1, 1), "lines"),
+    strip.background = element_rect(),
+    text = element_text(family = "Exo 2", colour = "#3C3C3C"),
+    plot.caption = element_text(size = rel(0.7), hjust = 0),
+    plot.caption.position = "plot",
+    plot.tag = element_text(size = rel(0.8), hjust = c(0, 1), color = "#6d6f71",
+                            margin = margin(-10,0,0,0)),
+    axis.text = element_text(size = rel(0.8)),
+    legend.text = element_text(size = rel(0.8)),
+    legend.title = element_text(size = rel(1.1), face = "bold"),
+    plot.title = element_text(size = rel(1.5), face = "bold"),
+    plot.title.position = "plot",
+    plot.subtitle = element_text(size = rel(1.2)),
+    strip.text = element_text(size = rel(0.8), face = "bold"),
+    plot.tag.position = "bottom")
+}
 
-theme_twoseventyeight <- theme_twoseventyeight +
-theme(plot.background = element_rect(fill = "white"),
-panel.background = element_rect(fill = 'white'),
-text = element_text(family = "Exo 2"),
-plot.caption = element_text(size = rel(0.9), hjust = 0),
-plot.tag = element_text(size = rel(0.8), hjust=c(0,1), color = '#6d6f71'),
-#plot.tag.position = c(0,0),
-axis.text = element_text(size = rel(0.8)),
-#axis.title = element_text(size = rel(1.1)),
-legend.text = element_text(size = rel(0.8)),
-legend.title = element_text(size = rel(1.1), face = "bold"),
-plot.title = element_text(size = rel(1.5), face = "bold", hjust = 0),
-plot.subtitle = element_text(size = rel(1.2), hjust = 0),
-strip.text = element_text(size = rel(0.8), face = "bold"))
-#axis.title.x = element_text(margin = margin(t = 10)),
-#axis.title.y = element_text(margin = margin(r = 10)))
+#Color Scale
 
-#Creating Custom Pallete
-twoseventyeight_color <- function(...) {
-twoseventyeight_colors <- c(
-`pink`     = "#E44EAE",
-`orange` = "#E4844E",
-`gray`     = "#999999",
-`red`    = "#e44e63",
-`purple`   = "#844EE4",
-`green` = "#4EE484",
-`blue` = "#4e63e4",
-`yellow` = "#e4cf4e",
-`black` = "#222222")
-cols <- c(...)
-if (is.null(cols))
-return (twoseventyeight_colors)
-twoseventyeight_colors[cols]
+scale_color_twoseventyeight <- function(palette = "main", n_colors = 1) {
+  custom_colors <- list(
+    pink = "#E44EAE",
+    orange = "#E4844E",
+    gray = "#999999",
+    red = "#e44e63",
+    purple = "#844EE4",
+    green = "#4EE484",
+    blue = "#4e63e4",
+    yellow = "#e4cf4e",
+    black = "#222222"
+  )
+  
+  custom_palettes <- list(
+    main = c(purple, orange, green, pink, blue, red, yellow, gray),
+    political = c(blue, red, yellow, green),
+    single = c(purple, purple)
+  )
+  
+  if (palette %in% names(custom_palettes)) {
+    colors <- custom_palettes[[palette]]
+  } else {
+    stop("Invalid palette name. Choose from: ", paste(names(custom_palettes), collapse = ", "))
+  }
+  
+  if (n_colors > 1) {
+    scale_color_manual(values = rep(colors, n_colors))
+  } else {
+    scale_color_manual(values = colors)
+  }
 }
-twoseventyeight_palette <- function(palette = "main", ...) {
-twoseventyeight_palettes <- list(
-`main` = twoseventyeight_color("purple", "orange", "green", "pink"),
-`political` = twoseventyeight_color("blue", "red", "yellow"),
-`single` = twoseventyeight_color("purple", "gray")
+
+#Individual Colors
+colors_twoseventyeight <- list(
+  pink = "#E44EAE",
+  orange = "#E4844E",
+  gray = "#999999",
+  red = "#e44e63",
+  purple = "#844EE4",
+  green = "#4EE484",
+  blue = "#4e63e4",
+  yellow = "#e4cf4e",
+  black = "#222222"
 )
-twoseventyeight_palettes[[palette]]
-}
-palette_gen <- function(palette = "main", direction = 1) {
-function(n) {
-if (n > length(twoseventyeight_palette(palette)))
-warning("Not enough colors in this palette!")
-else {
-all_colors <- twoseventyeight_palette(palette)
-all_colors <- unname(unlist(all_colors))
-all_colors <- if (direction >= 0) all_colors else rev(all_colors)
-color_list <- all_colors[1:n]
-}
-}
-}
-palette_gen_c <- function(palette = "main", direction = 1, ...) {
-pal <- twoseventyeight_palette(palette)
-pal <- if (direction >= 0) pal else rev(pal)
-colorRampPalette(pal, ...)
-}
-scale_fill_278 <- function(palette = "main", direction = 1, ...) {
-ggplot2::discrete_scale(
-"fill", "278",
-palette_gen(palette, direction),
-...
-)
-}
-scale_colour_278 <- function(palette = "main", direction = 1, ...) {
-ggplot2::discrete_scale(
-"colour", "278",
-palette_gen(palette, direction),
-...
-)
-}
-scale_color_278_c <- function(palette = "main", direction = 1, ...) {
-pal <- palette_gen_c(palette = palette, direction = direction)
-scale_color_gradientn(colors = pal(256), ...)
-}
